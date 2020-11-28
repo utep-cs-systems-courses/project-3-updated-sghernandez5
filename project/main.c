@@ -1,29 +1,60 @@
 #include <msp430.h>
+#include "led.h"
+#include "buzzer.h"
 #include <libTimer.h>
 #include <lcdutils.h>
 #include <lcddraw.h>
 #include <p2switches.h>
+#include <abCircle.h>
+#include "stateMachines.h"
+
 #define LED_GREEN BIT6             // P1.6
 
 
 short redrawScreen = 1;
-//u_int fontFgColor = COLOR_GREEN;
+u_int fontFgColor = COLOR_WHITE;
 
-
-/*
 void wdt_c_handler()
-{
-  static int secCount = 0;
 
+{
+  buzz_advance(); 
+  static int secCount = 0;
   secCount ++;
-  if (secCount == 250) {     
+  if (secCount == 250) {/* once/sec */
     secCount = 0;
     fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
     redrawScreen = 1;
   }
 }
-*/
 
+
+
+void drawArrow()
+{  
+  int center = 64;
+  //rectangle
+  fillRectangle(55,30,20,25,COLOR_LIGHT_BLUE);
+  //upside down triangle
+  for (u_char c = 0; c < 20; c++) {
+    for (u_char r = 0; r <= 20-c; r++) {
+      //right triangle
+      drawPixel(center+c, r+50, COLOR_LIGHT_BLUE);
+      //left triangle
+      drawPixel(center-c, r+50, COLOR_LIGHT_BLUE); 
+    }
+  } 
+}
+
+
+/*
+Layer layer0 = {	     
+  (AbShape *)&circle50,
+  {(screenWidth/2), (screenHeight/2)}, 
+  {0,0}, {0,0},	 
+  COLOR_ORANGE,
+  0,
+};
+*/
 
 void main()
 {
@@ -31,50 +62,22 @@ void main()
   P1OUT |= LED_GREEN;
   configureClocks();
   lcd_init();
-  p2sw_init(15);
+  buzzer_init(); 
+  //p2sw_init(15);
   
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
   clearScreen(COLOR_AQUAMARINE);
-  //avatar aang orange circle and blue arrow 
-
-
+  // buzz_advance();    
 
   
   while (1) {			/* forever */
-    if (redrawScreen) {
-        // display circle and arrow
-      switch(buttonPressed){
-      case 1:
-	// advance LEDS
-	led_advance();
-	break; 
-      case 2:
-	//music
-	buzz_advance();
-	break;
-      case 3:
-	// Turn arrow white
-	// display strings
-	
-
-	break; 
-
-      case 4:
-	buzzer_set_period(0);
-	red_on =0;
-	led_changed = 1;
-	led_update();
-	break;
-
-      }
-      //reset to 0 
-      redrawScreen =0; 
+    if (redrawScreen) {      
+      redrawScreen =0;
+      drawArrow(); 
+      //  layerDraw(&layer0); 
     }
-
-
-
     
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
