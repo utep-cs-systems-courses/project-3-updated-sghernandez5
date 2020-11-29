@@ -2,6 +2,8 @@
 #include "stateMachines.h"
 
 
+//char buttonPressed = 0; 
+
 void buzz_advance()
 {
   static char note = 0;
