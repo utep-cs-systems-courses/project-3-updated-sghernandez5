@@ -7,16 +7,16 @@
 
 
 void dim25() {
-  static char dimState = 1; 
+  static char dimState = 0; 
   switch(dimState) {
 
-  case 1: red_on = 1; dimState =2; break;
+  case 0: red_on = 1; dimState =1; break;
 
-  case 2: red_on = 0; dimState =3; break;
+  case 1: red_on = 0; dimState =2; break;
 
-  case 3: red_on = 0; dimState =4; break; 
+  case 2: red_on = 0; dimState =3; break; 
 
-  case 4: red_on = 0; dimState =1; break;
+  case 3: red_on = 0; dimState =0; break;
 
   }
   led_changed = 1; 
@@ -26,16 +26,16 @@ void dim25() {
 
 
 void dim50() {
-  static char dimState =1; 
+  static char dimState =0; 
   switch(dimState) {
 
-  case 1: red_on = 1; dimState =2; break; 
+  case 0: red_on = 1; dimState =1; break; 
 
-  case 2: red_on = 1; dimState =3; break;
+  case 1: red_on = 1; dimState =2; break;
 
-  case 3: red_on = 0; dimState =4;break; 
+  case 2: red_on = 0; dimState =3;break; 
 
-  case 4: red_on = 0; dimState =1;  break;
+  case 3: red_on = 0; dimState =0;  break;
   }
   led_changed = 1; 
   led_update();
@@ -43,28 +43,27 @@ void dim50() {
 }
 
 
-
+/*
 void dim75()
 {
-  static char dimState =1; 
+  static char dimState =0; 
   switch(dimState) {
 
-  case 1: red_on = 0; dimState=2; break;
+  case 0: red_on = 0; dimState=1; break;
 
-  case 2: red_on  =0; dimState=3; break; 
+  case 1: red_on  =1; dimState=2; break; 
 
-  case 3: red_on = 0; dimState=4; break; 
+  case 2: red_on = 1; dimState=3; break; 
 
-  case 4: red_on = 1; dimState=1; break;
+  case 3: red_on = 1; dimState=0; break;
 
   }
   led_changed = 1; 
   led_update();
 }
+*/
 
 
-// this method is in assembly
-/*
 void led_advance()
 {
   static char state  =0;
@@ -72,20 +71,20 @@ void led_advance()
   if(++count  != 250){
   switch(state){
   case 0:
-    red_on = 1;
-    led_changed = 1;
-    led_update();
+    // red_on = 1;
+    // led_changed = 1;
+    // led_update();
     break;
   case 1:
-    dim25();
+    // dim25();
     break;
   case 2:
-    red_on = 0;
-    led_changed = 1;
-    led_update(); 
+    // red_on = 0;
+    // led_changed = 1;
+    // led_update(); 
     break; 
   case 3:
-    dim50(); 
+    // dim50(); 
     break;
   case 4:
     dim75();
@@ -102,7 +101,6 @@ void led_advance()
     }
   }
 }
-*/
 
 void buzz_advance()
 {

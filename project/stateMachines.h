@@ -1,13 +1,18 @@
 #ifndef stateMachine_included
-#define stateMachine_included
+#define stateMachine_included 
 
 
-//extern char dimState; 
+
+
 
 
 void buzz_advance();
 
 void led_advance();
+
+void dim25();
+void dim50();
+void dim75();
 
 void transition_advance(); 
 
