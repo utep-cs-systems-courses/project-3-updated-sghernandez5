@@ -1,8 +1,108 @@
 #include "buzzer.h"
 #include "stateMachines.h"
+#include "led.h"
 
 
-//char buttonPressed = 0; 
+
+
+
+void dim25() {
+  static char dimState = 1; 
+  switch(dimState) {
+
+  case 1: red_on = 1; dimState =2; break;
+
+  case 2: red_on = 0; dimState =3; break;
+
+  case 3: red_on = 0; dimState =4; break; 
+
+  case 4: red_on = 0; dimState =1; break;
+
+  }
+  led_changed = 1; 
+  led_update();
+}
+
+
+
+void dim50() {
+  static char dimState =1; 
+  switch(dimState) {
+
+  case 1: red_on = 1; dimState =2; break; 
+
+  case 2: red_on = 1; dimState =3; break;
+
+  case 3: red_on = 0; dimState =4;break; 
+
+  case 4: red_on = 0; dimState =1;  break;
+  }
+  led_changed = 1; 
+  led_update();
+
+}
+
+
+
+void dim75()
+{
+  static char dimState =1; 
+  switch(dimState) {
+
+  case 1: red_on = 0; dimState=2; break;
+
+  case 2: red_on  =0; dimState=3; break; 
+
+  case 3: red_on = 0; dimState=4; break; 
+
+  case 4: red_on = 1; dimState=1; break;
+
+  }
+  led_changed = 1; 
+  led_update();
+}
+
+
+// this method is in assembly
+/*
+void led_advance()
+{
+  static char state  =0;
+  static char count  = 0;
+  if(++count  != 250){
+  switch(state){
+  case 0:
+    red_on = 1;
+    led_changed = 1;
+    led_update();
+    break;
+  case 1:
+    dim25();
+    break;
+  case 2:
+    red_on = 0;
+    led_changed = 1;
+    led_update(); 
+    break; 
+  case 3:
+    dim50(); 
+    break;
+  case 4:
+    dim75();
+    break; 
+  }
+  }
+  else{
+    if(state ==4){
+      state =0;
+      count = 0; 
+    }
+    else{
+    state++; 
+    }
+  }
+}
+*/
 
 void buzz_advance()
 {

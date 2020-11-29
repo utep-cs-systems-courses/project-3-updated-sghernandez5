@@ -17,6 +17,8 @@
 
 u_int bgColor = COLOR_BLUE; 
 
+
+static char dim = 0; 
 short redrawScreen = 1;
 u_int fontFgColor = COLOR_WHITE;
 
@@ -24,7 +26,11 @@ void wdt_c_handler()
 
 {
   static int secCount = 0;
-  secCount++;
+  //every 1/250
+  if(dim){
+    led_advance();
+  }
+  // secCount++;
    if (secCount == 250) {		/* once/sec */
     secCount = 0;
     fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
@@ -67,6 +73,7 @@ void main()
   P1DIR |= LED_GREEN;		/**< Green led on when CPU on */		
   P1OUT |= LED_GREEN;
   configureClocks();
+  led_init(); 
   lcd_init();
   buzzer_init(); 
   p2sw_init(15);
@@ -81,23 +88,30 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {      
       redrawScreen =0;
-      u_int switches = p2sw_read(); 
+      u_int switches = p2sw_read();
+      dim = 1;
       /*
       switch(buttonPressed){
 	case 1:
-	  //turn on dim red
-	  led_advance();
+	  //dim
+	  dim = 1; 
 	  break;
 	case 2:
 	  //turn on music
+	  dim = 0; 
 	  buzz_advance();
 	  break; 
 	case 3:
-	  //change LCD and add string 
+	  //change LCD and add string
+	  dim = 0; 
+	  drawArrow(COLOR_WHITE);
+	  //black screen
+	  clearScreen(COLOR_BLACk); 
 	  transition_advance();
 	  break;
 	case 4:
 	  //turn off both leds and buzzer
+	  dim = 0; 
 	  buzzer_set_period(0);
 	  red_on = 0;
 	  green_on = 0;

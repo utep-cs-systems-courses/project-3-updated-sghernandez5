@@ -2,7 +2,7 @@
 #define stateMachine_included
 
 
-//extern char buttonPressed;
+//extern char dimState; 
 
 
 void buzz_advance();
