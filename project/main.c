@@ -49,7 +49,7 @@ void drawArrow(u_int color)
 
 void wdt_c_handler()
 {
-     u_int count = 0; 
+  // u_int count = 0; 
      u_int check = p2sw_read();
      if(check & 256){
        // led advance will shift the red LED in dimness
@@ -57,8 +57,7 @@ void wdt_c_handler()
         clearScreen(COLOR_GREEN);
 	bgColor = COLOR_GREEN; 
        layerDraw(&layer1);
-       drawArrow(COLOR_LIGHT_BLUE);
-        led_advance(); 
+       drawArrow(COLOR_LIGHT_BLUE); 
         buttonPressed = 1;
 	redrawScreen = 1; 
       }
@@ -91,26 +90,27 @@ void wdt_c_handler()
      static int secCount = 0;
      
      // check what button is pressed every 1/250
-
-     if(++secCount<= 250){
+     secCount++;
+     if(secCount <= 250){
        switch(buttonPressed){
        case(1):
-	 //redrawScreen = 1;
+	 led_advance(); 
+	 redrawScreen = 1;
 	 break;
        case(2):
 	 //start song
 	 buzz_advance(); 
-	 // redrawScreen = 1; 
+	 redrawScreen = 1; 
 	 break;
        case(3):
-	 //	 redrawScreen = 1;
+	 redrawScreen = 1;
 	 break;
        case(4):
 	 // buzzer is off and the red led is off
 	 red_on =0;
 	 led_update(); 
 	 buzzer_set_period(0);
-	 //redrawScreen = 1; 
+	 redrawScreen = 1; 
 	 break;
 	 
        }
@@ -143,6 +143,17 @@ void main()
   while (1) {			/* forever */
     if (redrawScreen) {      
       redrawScreen =0;
+
+
+
+
+
+
+
+
+
+
+      
       
     }
   }

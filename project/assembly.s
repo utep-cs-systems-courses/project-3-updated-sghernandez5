@@ -23,28 +23,28 @@ jt:
 dim75:					
 	cmp #4, &dimState		;  dimState - 4
 	jc out 				;
-	mov.b &dimState, r12		; 
-	add.b r12,r12
+	mov.b  &dimState, r12		; 
+	add  r12,r12
 	mov  jt(r12), r0		;
 
 case0:
-	mov.b #1, &red_on		;
+	mov #1, &red_on		;
 	mov.b #1, &dimState			;
 	jmp  out			; 
 	
 case1:
-	mov.b #1, &red_on		;
+	mov #1, &red_on		;
 	mov.b #2, &dimState		;
 	jmp out				;
 case2:
-	mov.b #1, &red_on		;
+	mov #1, &red_on		;
 	mov.b #3, &dimState			;
 	jmp out				;
 case3:
-	mov.b #0, &red_on		;
+	mov #0, &red_on		;
 	mov.b #0, &dimState			;
 	jmp out				;
 out:
-	mov.b #1, &led_changed		;
+	mov #1, &led_changed		;
 	call #led_update
 	pop r0			; 

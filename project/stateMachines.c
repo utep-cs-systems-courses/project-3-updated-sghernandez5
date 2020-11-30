@@ -71,20 +71,20 @@ void led_advance()
   if(++count  != 250){
   switch(state){
   case 0:
-    // red_on = 1;
-    // led_changed = 1;
-    // led_update();
+    red_on = 1;
+    led_changed = 1;
+    led_update();
     break;
   case 1:
-    // dim25();
+     dim25();
     break;
   case 2:
-    // red_on = 0;
-    // led_changed = 1;
-    // led_update(); 
+     red_on = 0;
+     led_changed = 1;
+     led_update(); 
     break; 
   case 3:
-    // dim50(); 
+     dim50(); 
     break;
   case 4:
     dim75();
