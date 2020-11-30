@@ -23,9 +23,9 @@ jt:
 dim75:					
 	cmp #4, &dimState		;  dimState - 4
 	jc out 				;
-	mov.b &dimState, R12		; 
-	add.b R12,R12
-	mov.b  jt(R12), R0		;
+	mov.b &dimState, r12		; 
+	add.b r12,r12
+	mov.b  jt(r12), r0		;
 
 case0:
 	mov.b #1, &red_on		;
@@ -47,4 +47,4 @@ case3:
 out:
 	mov.b #1, &led_changed		;
 	call #led_update
-	pop R0			; 
+	pop r0			; 

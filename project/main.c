@@ -15,29 +15,10 @@
 
 #define LED_GREEN BIT6             // P1.6
 
-u_int bgColor = COLOR_BLUE; 
-
-
-static char dim = 0; 
+static char buttonPressed =0; 
 short redrawScreen = 1;
-u_int fontFgColor = COLOR_WHITE;
+u_int bgColor = COLOR_AQUAMARINE;
 
-void wdt_c_handler()
-
-{
-  static int secCount = 0;
-  //every 1/250
-  if(dim){
-    led_advance();
-  }
-  // secCount++;
-   if (secCount == 250) {		/* once/sec */
-    secCount = 0;
-    fontFgColor = (fontFgColor == COLOR_GREEN) ? COLOR_BLACK : COLOR_GREEN;
-    redrawScreen = 1;
-  }
-  
-}
 Layer layer1 = {
   (AbShape *)&circle50,
   {(screenWidth/2), (screenHeight/2)
@@ -46,8 +27,6 @@ Layer layer1 = {
   COLOR_ORANGE,
   0
 };
-
-
 
 
 void drawArrow(u_int color)
@@ -67,6 +46,63 @@ void drawArrow(u_int color)
 }
 
 
+void wdt_c_handler()
+{
+     u_int count = 0; 
+     u_int check = p2sw_read();
+     if(check & 256){
+        led_advance(); 
+        buttonPressed = 1; 
+      }
+     else if(check & 512){
+       //song
+       bgColor = COLOR_PINK;
+       buttonPressed = 2;
+     }
+     else if(check & 1024){
+       bgColor = COLOR_BLACK; 
+       layerDraw(&layer1);
+       drawArrow(COLOR_WHITE);
+       buttonPressed = 3;
+       drawString8x12(5,10,"Avatar State",COLOR_WHITE, COLOR_BLACK);
+       
+     }
+     else if(check & 2048){
+        buttonPressed = 4; 
+     }
+    
+     static int secCount = 0;
+     
+     // check what button is pressed every 1/250 
+     if(++secCount!= 250){
+      
+       switch(buttonPressed){
+       case(1):
+	 
+	 redrawScreen = 1;
+	 break;
+       case(2):
+	 redrawScreen = 1; 
+	 buzz_advance(); 
+	 break;
+       case(3):
+	 redrawScreen = 1;
+	 break;
+       case(4):
+	 // buzzer is off and the red led is off
+	 red_on =0;
+	 led_update(); 
+	 buzzer_set_period(0);
+	 break;
+       }
+     }
+     else{
+       secCount = 0;
+       redrawScreen =1;
+     }
+
+}
+
 
 void main()
 {
@@ -81,48 +117,15 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
-  clearScreen(COLOR_AQUAMARINE);
-  //background image aangs face 
+  //default background image aangs face 
   layerDraw(&layer1);
   drawArrow(COLOR_LIGHT_BLUE); 
   while (1) {			/* forever */
     if (redrawScreen) {      
       redrawScreen =0;
-      u_int switches = p2sw_read();
-      dim = 1;
-      /*
-      switch(buttonPressed){
-	case 1:
-	  //dim
-	  dim = 1; 
-	  break;
-	case 2:
-	  //turn on music
-	  dim = 0; 
-	  buzz_advance();
-	  break; 
-	case 3:
-	  //change LCD and add string
-	  dim = 0; 
-	  drawArrow(COLOR_WHITE);
-	  //black screen
-	  clearScreen(COLOR_BLACk); 
-	  transition_advance();
-	  break;
-	case 4:
-	  //turn off both leds and buzzer
-	  dim = 0; 
-	  buzzer_set_period(0);
-	  red_on = 0;
-	  green_on = 0;
-	  led_changed = 1;
-	  led_update();
-	  break; 
-      }
-      */
     }
+  }
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
     P1OUT |= LED_GREEN;		/* green on */
-  }
 }
