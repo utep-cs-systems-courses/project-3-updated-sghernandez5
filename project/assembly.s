@@ -21,30 +21,31 @@ jt:
 	.global dim75
 	
 dim75:					
-	cmp #4, &dimState		;  dimState - 4
-	jc out 				;
-	mov.b  &dimState, r12		; 
-	add  r12,r12
+	cmp #4, &dimState		; dimState - 4 unsigned comparinson 
+	jc out 				; go out 
+	mov.b  &dimState, r12		; r12 = dimState
+	add  r12,r12			; r12*2
 	mov  jt(r12), r0		;
 
 case0:
-	mov #1, &red_on		;
-	mov.b #1, &dimState			;
-	jmp  out			; 
+	mov #1, &red_on			;turn on red	
+	mov.b #1, &dimState		;set dimState to 1
+	jmp  out			;go out
 	
 case1:
-	mov #1, &red_on		;
-	mov.b #2, &dimState		;
-	jmp out				;
+	mov #1, &red_on			;turn on red 
+	mov.b #2, &dimState		;set dimState to 2
+	jmp out				;go out
 case2:
-	mov #1, &red_on		;
-	mov.b #3, &dimState			;
-	jmp out				;
+	mov #1, &red_on			;turn on red
+	mov.b #3, &dimState		;set dimState to 3
+	jmp out				;go out
 case3:
-	mov #0, &red_on		;
-	mov.b #0, &dimState			;
-	jmp out				;
+	mov #0, &red_on			;turn off red
+	mov.b #0, &dimState		;set dimState to 0 to repeat
+	jmp out				;go out 
 out:
-	mov #1, &led_changed		;
-	call #led_update
-	pop r0			; 
+	mov #1, &led_changed		;set led_changed to 1
+	call #led_update		;call led_update to activate the red LED to on/off
+	pop r0				
+	
