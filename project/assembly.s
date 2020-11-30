@@ -25,7 +25,7 @@ dim75:
 	jc out 				;
 	mov.b &dimState, r12		; 
 	add.b r12,r12
-	mov.b  jt(r12), r0		;
+	mov  jt(r12), r0		;
 
 case0:
 	mov.b #1, &red_on		;

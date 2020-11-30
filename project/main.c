@@ -17,7 +17,8 @@
 
 static char buttonPressed =0; 
 short redrawScreen = 1;
-u_int bgColor = COLOR_AQUAMARINE;
+
+u_int bgColor; 
 
 Layer layer1 = {
   (AbShape *)&circle50,
@@ -51,13 +52,24 @@ void wdt_c_handler()
      u_int count = 0; 
      u_int check = p2sw_read();
      if(check & 256){
+       // led advance will shift the red LED in dimness
+       //led75 will be in assembly
+        clearScreen(COLOR_GREEN);
+	bgColor = COLOR_GREEN; 
+       layerDraw(&layer1);
+       drawArrow(COLOR_LIGHT_BLUE);
         led_advance(); 
-        buttonPressed = 1; 
+        buttonPressed = 1;
+	redrawScreen = 1; 
       }
      else if(check & 512){
        //song
+       clearScreen(COLOR_PINK);
        bgColor = COLOR_PINK;
+       layerDraw(&layer1);
+       drawArrow(COLOR_LIGHT_BLUE);
        buttonPressed = 2;
+       redrawScreen =1; 
      }
      else if(check & 1024){
        bgColor = COLOR_BLACK; 
@@ -65,42 +77,49 @@ void wdt_c_handler()
        drawArrow(COLOR_WHITE);
        buttonPressed = 3;
        drawString8x12(5,10,"Avatar State",COLOR_WHITE, COLOR_BLACK);
-       
+       redrawScreen =1; 
      }
      else if(check & 2048){
-        buttonPressed = 4; 
+       clearScreen(COLOR_WHITE); 
+       drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_BLACK);
+       drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_BLACK);
+
+        buttonPressed = 4;
+	redrawScreen=1; 
      }
     
      static int secCount = 0;
      
-     // check what button is pressed every 1/250 
-     if(++secCount!= 250){
-      
+     // check what button is pressed every 1/250
+
+     if(++secCount<= 250){
        switch(buttonPressed){
        case(1):
-	 
-	 redrawScreen = 1;
+	 //redrawScreen = 1;
 	 break;
        case(2):
-	 redrawScreen = 1; 
+	 //start song
 	 buzz_advance(); 
+	 // redrawScreen = 1; 
 	 break;
        case(3):
-	 redrawScreen = 1;
+	 //	 redrawScreen = 1;
 	 break;
        case(4):
 	 // buzzer is off and the red led is off
 	 red_on =0;
 	 led_update(); 
 	 buzzer_set_period(0);
+	 //redrawScreen = 1; 
 	 break;
+	 
        }
+       redrawScreen =1; 
      }
      else{
-       secCount = 0;
-       redrawScreen =1;
+       //reset secCount 
+       secCount = 0; 
      }
-
 }
 
 
@@ -117,12 +136,14 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
-  //default background image aangs face 
+  //default background image aangs face
+  bgColor = COLOR_AQUAMARINE; 
   layerDraw(&layer1);
   drawArrow(COLOR_LIGHT_BLUE); 
   while (1) {			/* forever */
     if (redrawScreen) {      
       redrawScreen =0;
+      
     }
   }
     P1OUT &= ~LED_GREEN;	/* green off */
