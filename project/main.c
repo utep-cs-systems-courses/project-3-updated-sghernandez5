@@ -15,7 +15,7 @@
 
 #define LED_GREEN BIT6             // P1.6
 
-static char buttonPressed =0; 
+//static char buttonPressed =0; 
 short redrawScreen = 1;
 
 u_int bgColor; 
@@ -51,6 +51,8 @@ void wdt_c_handler()
 {
   // u_int count = 0; 
      u_int check = p2sw_read();
+     static char buttonPressed =0;
+     
      if(check & 256){
        // led advance will shift the red LED in dimness
        //led75 will be in assembly
@@ -59,7 +61,7 @@ void wdt_c_handler()
        layerDraw(&layer1);
        drawArrow(COLOR_LIGHT_BLUE); 
         buttonPressed = 1;
-	redrawScreen = 1; 
+	redrawScreen =1;
       }
      else if(check & 512){
        //song
@@ -82,39 +84,32 @@ void wdt_c_handler()
        clearScreen(COLOR_WHITE); 
        drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_BLACK);
        drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_BLACK);
-
         buttonPressed = 4;
-	redrawScreen=1; 
+	redrawScreen =1; 
      }
-    
      static int secCount = 0;
      
      // check what button is pressed every 1/250
-     secCount++;
-     if(secCount <= 250){
+     if(++secCount != 250){
        switch(buttonPressed){
        case(1):
 	 led_advance(); 
-	 redrawScreen = 1;
 	 break;
        case(2):
 	 //start song
-	 buzz_advance(); 
-	 redrawScreen = 1; 
+	 buzz_advance();  
 	 break;
        case(3):
-	 redrawScreen = 1;
+	 
 	 break;
        case(4):
 	 // buzzer is off and the red led is off
 	 red_on =0;
 	 led_update(); 
 	 buzzer_set_period(0);
-	 redrawScreen = 1; 
-	 break;
-	 
+	 //redrawScreen =1; 
+	 break; 
        }
-       redrawScreen =1; 
      }
      else{
        //reset secCount 
@@ -137,27 +132,15 @@ void main()
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   
   //default background image aangs face
-  bgColor = COLOR_AQUAMARINE; 
-  layerDraw(&layer1);
-  drawArrow(COLOR_LIGHT_BLUE); 
+  
   while (1) {			/* forever */
     if (redrawScreen) {      
-      redrawScreen =0;
-
-
-
-
-
-
-
-
-
-
-      
-      
+      redrawScreen =0;      
     }
-  }
+  
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
-    P1OUT |= LED_GREEN;		/* green on */
+    P1OUT |= LED_GREEN;         /* green on */
+
+  }
 }
