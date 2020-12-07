@@ -17,106 +17,55 @@
 
 //static char buttonPressed =0; 
 short redrawScreen = 1;
+static char buttonPressed =0;
 
 u_int bgColor; 
 
-Layer layer1 = {
-  (AbShape *)&circle50,
-  {(screenWidth/2), (screenHeight/2)
-  },
-  {0,0}, {0,0},
-  COLOR_ORANGE,
-  0
-};
-
-
-void drawArrow(u_int color)
-{  
-  int center = 64;
-  //rectangle
-  fillRectangle(55,30,20,25,color);
-  //upside down triangle
-  for (u_char c = 0; c < 20; c++) {
-    for (u_char r = 0; r <= 20-c; r++) {
-      //right triangle
-      drawPixel(center+c, r+50, color);
-      //left triangle
-      drawPixel(center-c, r+50, color); 
-    }
-  } 
-}
 
 
 void wdt_c_handler()
 {
-  // u_int count = 0; 
      u_int check = p2sw_read();
-     static char buttonPressed =0;
-     
-     if(check & 256){
-       // led advance will shift the red LED in dimness
-       //led75 will be in assembly
-        clearScreen(COLOR_GREEN);
-	bgColor = COLOR_GREEN; 
-       layerDraw(&layer1);
-       drawArrow(COLOR_LIGHT_BLUE); 
-        buttonPressed = 1;
-	redrawScreen =1;
-      }
-     else if(check & 512){
-       //song
-       clearScreen(COLOR_PINK);
-       bgColor = COLOR_PINK;
-       layerDraw(&layer1);
-       drawArrow(COLOR_LIGHT_BLUE);
-       buttonPressed = 2;
-       redrawScreen =1; 
-     }
-     else if(check & 1024){
-       bgColor = COLOR_BLACK; 
-       layerDraw(&layer1);
-       drawArrow(COLOR_WHITE);
-       buttonPressed = 3;
-       drawString8x12(5,10,"Avatar State",COLOR_WHITE, COLOR_BLACK);
-       redrawScreen =1; 
-     }
-     else if(check & 2048){
-       clearScreen(COLOR_WHITE); 
-       drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_BLACK);
-       drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_BLACK);
-        buttonPressed = 4;
-	redrawScreen =1; 
-     }
      static int secCount = 0;
-     
-     // check what button is pressed every 1/250
-     if(++secCount != 250){
-       switch(buttonPressed){
-       case(1):
-	 led_advance(); 
-	 break;
-       case(2):
-	 //start song
-	 buzz_advance();  
-	 break;
-       case(3):
-	 
-	 break;
-       case(4):
-	 // buzzer is off and the red led is off
-	 red_on =0;
-	 led_update(); 
-	 buzzer_set_period(0);
-	 //redrawScreen =1; 
-	 break; 
+     secCount++; 
+     if((check & 1)==0){ 
+        buttonPressed = 1;
+      }
+     if((check & 2)==0){
+       buttonPressed = 2;
+     }
+    if((check & 4) == 0){
+       buttonPressed = 3; 
+     }
+    if((check & 8) == 0){
+        buttonPressed = 4;
+     }
+
+     switch (buttonPressed){
+     case 1:
+       redrawScreen =1; 
+       break;
+     case 2:
+       redrawScreen =1;
+       break;
+     case 3:
+       if(secCount == 250){
+       redrawScreen =1;
        }
+       break;
+     case 4:
+       if(secCount == 250){
+       redrawScreen =1;
+       }
+       break; 
      }
-     else{
-       //reset secCount 
-       secCount = 0; 
+      if(secCount == 250){
+       secCount =0; 
      }
+
 }
 
+ 
 
 void main()
 {
@@ -130,17 +79,44 @@ void main()
   
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
-  
-  //default background image aangs face
-  
-  while (1) {			/* forever */
+  drawAang(COLOR_PINK,COLOR_LIGHT_BLUE); 
+  bgColor = COLOR_PINK; 
+  while (1) {/* forever */ 
     if (redrawScreen) {      
-      redrawScreen =0;      
+      redrawScreen =0;
+      switch(buttonPressed){
+       case(1):
+	 led_advance();
+	 break;
+	 
+       case(2):
+	 //start song 
+	 buzz_advance(); 
+	 break;
+	 
+       case(3):
+	 drawAang(COLOR_PINK,COLOR_LIGHT_BLUE); 
+	 drawString8x12(5,10,"Avatar Aang",COLOR_PURPLE, COLOR_PINK);
+	 drawFlower(COLOR_DEEP, 42);
+	 // drawFlower(COLOR_PURPLE,42);
+	 // drawFlower(COLOR_YELLOW,96); 
+	 
+	 break;
+	 
+       case(4):
+	 // buzzer is off and the red led is off
+ 
+	 buzzer_set_period(0);
+	 drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_PINK);
+	 drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_PINK);
+	 // drawFlower(COLOR_BLUE,70); 
+	 red_on =0;
+	 led_update();
+	 break; 
+      } 
     }
-  
     P1OUT &= ~LED_GREEN;	/* green off */
     or_sr(0x10);		/**< CPU OFF */
     P1OUT |= LED_GREEN;         /* green on */
-
   }
 }

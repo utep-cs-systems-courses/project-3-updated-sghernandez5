@@ -1,8 +1,10 @@
 #include "buzzer.h"
-#include "stateMachines.h"
 #include "led.h"
-
-
+#include "lcdutils.h"
+#include "lcddraw.h"
+#include "abCircle.h"
+#include "shape.h"
+#include "stateMachines.h"
 
 
 
@@ -43,25 +45,73 @@ void dim50() {
 }
 
 
-/*
-void dim75()
-{
-  static char dimState =0; 
-  switch(dimState) {
-
-  case 0: red_on = 0; dimState=1; break;
-
-  case 1: red_on  =1; dimState=2; break; 
-
-  case 2: red_on = 1; dimState=3; break; 
-
-  case 3: red_on = 1; dimState=0; break;
-
-  }
-  led_changed = 1; 
-  led_update();
+void drawArrow(u_int color)
+{  
+  int center = 64;
+  //rectangle
+  fillRectangle(55,30,20,25,color);
+  //upside down triangle
+  for (u_char c = 0; c < 20; c++) {
+    for (u_char r = 0; r <= 20-c; r++) {
+      //right triangle
+      drawPixel(center+c, r+50, color);
+      //left triangle
+      drawPixel(center-c, r+50, color); 
+    }
+  } 
 }
-*/
+
+
+
+void drawAang(u_int background, u_int arrow){
+  //circle 
+  Layer layer1 = {
+    (AbShape *)&circle50,
+    {(screenWidth/2), (screenHeight/2)
+    },
+    {0,0}, {0,0},
+    COLOR_ORANGE,
+    0
+  };
+  
+  //change background and arrow color
+  clearScreen(background);
+  bgColor = background;
+  layerDraw(&layer1); 
+  drawArrow(arrow); 
+
+}
+
+void drawFlower(u_int color, int center){  
+  //height of leaves 
+  for(u_char r =0; r< 5; r++){
+    //width of leaves
+    for(u_char c = 0; c <4+ r; c++){
+      drawPixel(center+c+5, r+40, COLOR_GREEN);
+      drawPixel(center-c-5, r+40, COLOR_GREEN);
+    }
+  }
+
+  //rose petals
+   for(u_char r=0; r< 4; r++){
+    //width of leaves
+    for(u_char c = 0; c <=r; c++){    
+      drawPixel(center+c-5, r+36,color);
+      drawPixel(center-c+5, r+36,color); 
+    }
+  }
+  //rose bud top 
+  for (u_char r = 0; r < 6 ; r++) {
+    for (u_char c = 0; c<=r; c++) {
+      //right triangle
+      drawPixel(center+c, r+35, color);
+      //left triangle
+      drawPixel(center-c, r+35, color);
+    }
+    }
+  fillRectangle(center-4, center-23,9,4, color);
+}
+
 
 
 void led_advance()
