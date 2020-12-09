@@ -63,7 +63,8 @@ void drawArrow(u_int color)
 
 
 
-void drawAang(u_int background, u_int arrow){
+void drawAang(u_int background, u_int arrow)
+{
   //circle 
   Layer layer1 = {
     (AbShape *)&circle50,
@@ -75,14 +76,14 @@ void drawAang(u_int background, u_int arrow){
   };
   
   //change background and arrow color
-  clearScreen(background);
   bgColor = background;
   layerDraw(&layer1); 
   drawArrow(arrow); 
 
 }
 
-void drawFlower(u_int color, int center, int y){
+void drawFlower(u_int color, int center, int y)
+{
   //height of leaves 
   for(u_char r =0; r< 5; r++){
     //width of leaves
@@ -110,6 +111,79 @@ void drawFlower(u_int color, int center, int y){
     }
     }
 }
+
+
+void redbar(u_int color)
+{
+  int center = 50; 
+  for(char c =0; c < 40; c++){
+      drawPixel(center+c, 150, color);
+      drawPixel(center+c, 151, color);
+      drawPixel(center+c, 152, color);
+      drawPixel(center+c, 153, color);
+      drawPixel(center+c, 154, color); 
+
+ }
+}
+
+
+void greenbar()
+{
+  static int load = 10;
+  int center = 50; 
+    for( char  c = 0; c < load  ;  c++){
+      drawPixel(center+c, 150, COLOR_GREEN);
+      drawPixel(center+c, 151, COLOR_GREEN);
+      drawPixel(center+c, 152, COLOR_GREEN);
+      drawPixel(center+c, 153, COLOR_GREEN);
+      drawPixel(center+c, 154, COLOR_GREEN); 
+   
+  }
+    if(load ==40){load =0; } 
+    load+=10; 
+}
+
+
+
+void load()
+{
+  static int count = 0;
+  static int state = 0; 
+    count = 0;
+    switch(state){
+    case 0:
+      redbar(COLOR_RED);
+      state++;
+      break;
+    case 1:
+      redbar(COLOR_RED);
+      greenbar(); 
+      state++; 
+      break;
+    case 2:
+      redbar(COLOR_RED);
+      greenbar();
+      state++;
+      break;
+    case 3:
+      redbar(COLOR_RED);
+      greenbar();
+      state++;
+      break;
+    case 4:
+      // full green bar
+      greenbar();
+      state = 0; 
+      break;
+    }
+}
+
+
+
+
+
+
+
 
 
 

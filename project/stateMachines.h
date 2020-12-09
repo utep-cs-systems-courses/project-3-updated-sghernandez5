@@ -23,4 +23,10 @@ void drawAang( u_int background, u_int arrow);
 
 void drawFlower( u_int color, int center, int y);
 
+void load();
+
+void greenbar();
+
+void redbar(u_int color); 
+
 #endif // included

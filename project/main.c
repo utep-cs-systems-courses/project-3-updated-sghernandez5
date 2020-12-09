@@ -33,9 +33,7 @@ void wdt_c_handler()
 {
      u_int check = p2sw_read();
      static int secCount = 0;
-     static int count = 0; 
-     secCount++;
-     count++; 
+     secCount++; 
      //check what button is pressed every instance and have buttonPressed set 
      if((check & 1)==0){ 
         buttonPressed = 1;
@@ -58,7 +56,7 @@ void wdt_c_handler()
        redrawScreen =1;
        break;
      case 3:
-       if(count == 275){
+       if(secCount == 250){
 	 redrawScreen =1;
        }
        break;
@@ -73,9 +71,7 @@ void wdt_c_handler()
       if(secCount == 250){
        secCount =0; 
      }
-      if (count == 275){
-	count = 0; 
-      }
+      
 }
 
  
@@ -108,7 +104,8 @@ void main()
 	 break;
 	 
        case(3):
-	 //clearscreen w/in the method make sure the flowers dont copy and paste but imitate falling
+
+	 //redraw backgroung of aang, for no trace of previous falling flowers
 	 drawAang(COLOR_PINK,COLOR_LIGHT_BLUE); 
 	 drawString8x12(5,10,"Avatar Aang",COLOR_PURPLE, COLOR_PINK);
 
@@ -143,18 +140,9 @@ void main()
 	 buzzer_set_period(0);
 	 drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_PINK);
 	 drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_PINK);
-
-	 
-	 
-
-
-
-
-
-
-	 
 	 red_on =0;
 	 led_update();
+	 load(); 
 	 break; 
       } 
     }
