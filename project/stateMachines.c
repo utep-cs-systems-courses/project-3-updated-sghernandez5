@@ -82,34 +82,33 @@ void drawAang(u_int background, u_int arrow){
 
 }
 
-void drawFlower(u_int color, int center){  
+void drawFlower(u_int color, int center, int y){
   //height of leaves 
   for(u_char r =0; r< 5; r++){
     //width of leaves
     for(u_char c = 0; c <4+ r; c++){
-      drawPixel(center+c+5, r+40, COLOR_GREEN);
-      drawPixel(center-c-5, r+40, COLOR_GREEN);
+      drawPixel(center+c+5, r+40+y, COLOR_GREEN);
+      drawPixel(center-c-5, r+40+y, COLOR_GREEN);
     }
   }
 
   //rose petals
-   for(u_char r=0; r< 4; r++){
+   for(u_char r=0; r< 6; r++){
     //width of leaves
     for(u_char c = 0; c <=r; c++){    
-      drawPixel(center+c-5, r+36,color);
-      drawPixel(center-c+5, r+36,color); 
+      drawPixel(center+c-5, r+36+y,color);
+      drawPixel(center-c+5, r+36+y,color); 
     }
   }
   //rose bud top 
   for (u_char r = 0; r < 6 ; r++) {
     for (u_char c = 0; c<=r; c++) {
       //right triangle
-      drawPixel(center+c, r+35, color);
+      drawPixel(center+c, r+35+y, color);
       //left triangle
-      drawPixel(center-c, r+35, color);
+      drawPixel(center-c, r+35+y, color);
     }
     }
-  fillRectangle(center-4, center-23,9,4, color);
 }
 
 

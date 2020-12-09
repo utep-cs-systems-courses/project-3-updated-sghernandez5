@@ -21,6 +21,6 @@ void drawArrow( u_int color);
 
 void drawAang( u_int background, u_int arrow);
 
-void drawFlower( u_int color, int center);
+void drawFlower( u_int color, int center, int y);
 
 #endif // included

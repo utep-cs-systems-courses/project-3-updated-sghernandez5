@@ -18,6 +18,12 @@
 //static char buttonPressed =0; 
 short redrawScreen = 1;
 static char buttonPressed =0;
+static int yDeep =0;
+static int yPurple =-30; 
+static int yYellow =-35;
+static int yRed = -60;
+static int yOrangeRed = -55;
+static int yGoldenRod = -65; 
 
 u_int bgColor; 
 
@@ -27,7 +33,10 @@ void wdt_c_handler()
 {
      u_int check = p2sw_read();
      static int secCount = 0;
-     secCount++; 
+     static int count = 0; 
+     secCount++;
+     count++; 
+     //check what button is pressed every instance and have buttonPressed set 
      if((check & 1)==0){ 
         buttonPressed = 1;
       }
@@ -40,7 +49,7 @@ void wdt_c_handler()
     if((check & 8) == 0){
         buttonPressed = 4;
      }
-
+    //based on buttonPressed it will hold and follow within the main method 
      switch (buttonPressed){
      case 1:
        redrawScreen =1; 
@@ -49,8 +58,8 @@ void wdt_c_handler()
        redrawScreen =1;
        break;
      case 3:
-       if(secCount == 250){
-       redrawScreen =1;
+       if(count == 275){
+	 redrawScreen =1;
        }
        break;
      case 4:
@@ -59,10 +68,14 @@ void wdt_c_handler()
        }
        break; 
      }
+
+     //reset secCount
       if(secCount == 250){
        secCount =0; 
      }
-
+      if (count == 275){
+	count = 0; 
+      }
 }
 
  
@@ -80,7 +93,7 @@ void main()
   enableWDTInterrupts();      /**< enable periodic interrupt */
   or_sr(0x8);	              /**< GIE (enable interrupts) */
   drawAang(COLOR_PINK,COLOR_LIGHT_BLUE); 
-  bgColor = COLOR_PINK; 
+  bgColor = COLOR_PINK;
   while (1) {/* forever */ 
     if (redrawScreen) {      
       redrawScreen =0;
@@ -95,11 +108,32 @@ void main()
 	 break;
 	 
        case(3):
+	 //clearscreen w/in the method make sure the flowers dont copy and paste but imitate falling
 	 drawAang(COLOR_PINK,COLOR_LIGHT_BLUE); 
 	 drawString8x12(5,10,"Avatar Aang",COLOR_PURPLE, COLOR_PINK);
-	 drawFlower(COLOR_DEEP, 42);
-	 // drawFlower(COLOR_PURPLE,42);
-	 // drawFlower(COLOR_YELLOW,96); 
+
+	 drawFlower(COLOR_DEEP, 15, yDeep);
+	 drawFlower(COLOR_PURPLE,70, yPurple);
+	 drawFlower(COLOR_YELLOW,110,yYellow);
+	 drawFlower(COLOR_RED,35,yRed);
+	 drawFlower(COLOR_ORANGE_RED,55, yOrangeRed);
+	 drawFlower(COLOR_GOLDENROD,85,yGoldenRod); 
+
+	 
+	 //imitate falling flowers
+	 yDeep+=10;
+	 yPurple+=10;
+	 yYellow+=10;
+	 yRed+=10;
+	 yOrangeRed+=10;
+	 yGoldenRod+=10; 
+	 // reset flower position to in screen to start at the top in order 
+	 if(yDeep > 160){yDeep = 0;}
+	 if(yPurple > 160){yPurple = -30;}
+	 if(yYellow > 160){yYellow = -35; }
+	 if(yRed >160){ yRed =-60; }
+	 if(yOrangeRed >160){yOrangeRed = -55; }
+	 if(yGoldenRod >160){yGoldenRod = -65; }
 	 
 	 break;
 	 
@@ -109,7 +143,16 @@ void main()
 	 buzzer_set_period(0);
 	 drawString11x16(0,10,"RED LED OFF",COLOR_RED, COLOR_PINK);
 	 drawString11x16(0,30,"BUZZER OFF",COLOR_RED, COLOR_PINK);
-	 // drawFlower(COLOR_BLUE,70); 
+
+	 
+	 
+
+
+
+
+
+
+	 
 	 red_on =0;
 	 led_update();
 	 break; 
