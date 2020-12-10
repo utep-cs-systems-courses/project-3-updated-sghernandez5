@@ -130,7 +130,7 @@ void drawFlower(u_int color, int center, int y)
 void greenbar()
 {
   static int load = 10;
-  int center = 50; 
+  char center = 50; 
     for( char  c = 0; c < load  ;  c++){
       drawPixel(center+c, 150, COLOR_GREEN);
       drawPixel(center+c, 151, COLOR_GREEN);
