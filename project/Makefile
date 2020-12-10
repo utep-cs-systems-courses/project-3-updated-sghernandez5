@@ -13,7 +13,7 @@ all:main.elf
 
 #additional rules for files
 
-main.elf: ${COMMON_OBJECTS} main.o wdt_handler.o led.o buzzer.o stateMachines.o assembly.o
+main.elf: ${COMMON_OBJECTS} main.o wdt_handler.o led.o buzzer.o stateMachines.o assembly.o redbar.o
 
 	${CC} ${CFLAGS} ${LDFLAGS} -o $@ $^ -lTimer -lLcd -lp2sw -lShape -lCircle 
 

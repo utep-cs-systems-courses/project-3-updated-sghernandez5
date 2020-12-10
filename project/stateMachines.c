@@ -113,18 +113,18 @@ void drawFlower(u_int color, int center, int y)
 }
 
 
-void redbar(u_int color)
-{
-  int center = 50; 
-  for(char c =0; c < 40; c++){
-      drawPixel(center+c, 150, color);
-      drawPixel(center+c, 151, color);
-      drawPixel(center+c, 152, color);
-      drawPixel(center+c, 153, color);
-      drawPixel(center+c, 154, color); 
+//void redbar(u_int color)
+//{
+// int center = 50; 
+// for(char c =0; c < 40; c++){
+//    drawPixel(center+c, 150, color);
+//     drawPixel(center+c, 151, color);
+//    drawPixel(center+c, 152, color);
+//    drawPixel(center+c, 153, color);
+//    drawPixel(center+c, 154, color); 
 
- }
-}
+//}
+//}
 
 
 void greenbar()
