@@ -21,7 +21,7 @@ jt:
 	.global dim75
 	
 dim75:					
-	cmp #4, &dimState		; dimState - 4 unsigned comparinson 
+	cmp #4, &dimState		; dimState - 4 unsigned comparinson  a-b ,a>=b
 	jc out 				; go out 
 	mov.b  &dimState, r12		; r12 = dimState
 	add  r12,r12			; r12*2

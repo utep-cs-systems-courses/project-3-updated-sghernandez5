@@ -12,7 +12,7 @@ redbar:
 	mov r12, 6(r1)		; risk of losing r12 in call
 	
 loop:   cmp #40, 2(r1)		; a-b or 2(r1)-40
-	jnc body		; no carry a<=b signed comparison
+	jnc body		; a<b = borrow/No carry 
 	jmp end			; 
 body:
 	mov 2(r1), 4(r1)	; 4(r1) = c
